@@ -20,6 +20,8 @@ def findEquivalenceClasses(machine: StateMachine):
     test_set = set([i for i in range(machine.numOfStates)]) - set(machine.endStates)
     P = [machine.endStates, list(test_set)]
     S = deque()
+    if len(machine.endStates) == machine.numOfStates:
+        P.remove([])
 
     for symb in machine.V.listOfSymbols():
         for elem in P:
@@ -29,7 +31,7 @@ def findEquivalenceClasses(machine: StateMachine):
         C, a = S.popleft()
         for R in P:
             R1, R2 = classSplit(machine, R, C, a)
-
+            
             if len(R1) > 0 and len(R2) > 0:
 
                 P.remove(R)
@@ -56,6 +58,8 @@ def minimizeStateMachine(machine: StateMachine) -> StateMachine:
                               begState=newStates[machine.begState],
                               endStates=[newStates[state] for state in machine.endStates])
     
+    print(P)
+
     for stateFrom, state in enumerate(P):
         state = state[0]
         
