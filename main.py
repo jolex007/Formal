@@ -4,7 +4,7 @@ from StateMachineViz import vizualizeStateMachine
 from MinimizeStateMachine import minimizeStateMachine
 
 def main():
-    machine = readStateMichineFromFile('tests/machines/machine_3.txt')
+    machine = readStateMichineFromFile('tests/machines/machine_5.txt')
 
     minMachine = minimizeStateMachine(machine)
 

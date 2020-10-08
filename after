@@ -1,0 +1,14 @@
+digraph after {
+	rankdir=LR size="8,5"
+	node [shape=doublecircle]
+	0
+	0
+	0
+	0
+	node [shape=circle]
+	0 -> 0 [label=a]
+	0 -> 0 [label=b]
+	node [style=invisible]
+	secret_node
+	secret_node -> 0
+}
