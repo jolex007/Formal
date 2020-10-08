@@ -1,72 +1,81 @@
 from StateMachine import StateMachine, Alphabet
+from StateMachine import Edge
 from collections import deque
 
-def classSplit(machine: StateMachine, R: list, C, a):
-    R1 = []
-    R2 = []
-    for state in R:
+
+def classSplit(machine: StateMachine, partition: list, Splitter, splitSymbol):
+    inSpltter = []
+    noInSplitter = []
+    for state in partition:
         flag = True
-        for c in C:
-            if (c, a) in machine.switches[state]:
-                R1.append(state)
+        for symbol in Splitter:
+            if (symbol, splitSymbol) in machine.switches[state]:
+                inSpltter.append(state)
                 flag = False
                 break
         if flag:
-            R2.append(state)
-    
-    return R1, R2
+            noInSplitter.append(state)
+
+    return inSpltter, noInSplitter
+
 
 def findEquivalenceClasses(machine: StateMachine):
-    test_set = set([i for i in range(machine.numOfStates)]) - set(machine.endStates)
-    P = [machine.endStates, list(test_set)]
-    S = deque()
+    Partition = [machine.endStates,
+                 list(set([i for i in range(machine.numOfStates)]) -
+                      set(machine.endStates))]
+
+    Queue = deque()
+
     if len(machine.endStates) == machine.numOfStates:
-        P.remove([])
+        Partition.remove([])
 
     for symb in machine.V.listOfSymbols():
-        for elem in P:
-            S.append((elem, symb))
-    
-    while len(S) > 0:
-        C, a = S.popleft()
-        for R in P:
-            R1, R2 = classSplit(machine, R, C, a)
-            
-            if len(R1) > 0 and len(R2) > 0:
+        for elem in Partition:
+            Queue.append((elem, symb))
 
-                P.remove(R)
-                P.append(R1)
-                P.append(R2)
+    while len(Queue) > 0:
+        Splitter, splitSymbol = Queue.popleft()
+        for currentPartition in Partition:
+            inSpltter, noInSplitter = classSplit(machine=machine,
+                                                 partition=currentPartition,
+                                                 Splitter=Splitter,
+                                                 splitSymbol=splitSymbol)
 
-                for c in machine.V.listOfSymbols():
-                    S.append((R1, c))
-                    S.append((R2, c))
-    
-    return P
+            if len(inSpltter) > 0 and len(noInSplitter) > 0:
+
+                Partition.remove(currentPartition)
+                Partition.append(inSpltter)
+                Partition.append(noInSplitter)
+
+                for symbol in machine.V.listOfSymbols():
+                    Queue.append((inSpltter, symbol))
+                    Queue.append((noInSplitter, symbol))
+
+    return Partition
+
 
 def minimizeStateMachine(machine: StateMachine) -> StateMachine:
-    P = findEquivalenceClasses(machine)
+    Partition = findEquivalenceClasses(machine)
 
     newStates = [0 for i in range(machine.numOfStates)]
 
-    for indx, item in enumerate(P):
+    for indx, item in enumerate(Partition):
         for elem in item:
             newStates[elem] = indx
-    
+
     newMachine = StateMachine(alphabet=machine.V,
-                              numberOfStates=len(P),
+                              numberOfStates=len(Partition),
                               begState=newStates[machine.begState],
                               endStates=[newStates[state] for state in machine.endStates])
-    
-    print(P)
 
-    for stateFrom, state in enumerate(P):
+    for stateFrom, state in enumerate(Partition):
         state = state[0]
-        
+
         for stateTo, symb in machine.switches[state]:
             stateTo = newStates[stateTo]
             if (stateTo, symb) not in newMachine.switches[stateFrom]:
-                newMachine.switches[stateFrom].append((stateTo, symb))
-    
-    return newMachine
+                newMachine.addEdge(stateFrom=stateFrom,
+                                   stateTo=stateTo,
+                                   symbol=symb)
 
+    return newMachine
