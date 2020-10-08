@@ -1,6 +1,8 @@
 import pytest
-from StateMachine import StateMachine, readStateMichineFromFile, saveStateMachineToText, Alphabet
+from StateMachine import StateMachine, Alphabet
+from StateMachine import readStateMichineFromFile, saveStateMachineToText
 from MinimizeStateMachine import minimizeStateMachine
+
 
 class TestStateMachine:
     @pytest.mark.parametrize('machine_filename, answer_filename', [
@@ -9,7 +11,7 @@ class TestStateMachine:
     ])
     def test_minimizer(self, machine_filename: str, answer_filename: str):
         machine = readStateMichineFromFile(machine_filename)
-        
+
         minMachine = minimizeStateMachine(machine)
 
         minMachineText = saveStateMachineToText(minMachine)
@@ -17,5 +19,3 @@ class TestStateMachine:
         f = open(answer_filename)
         assert minMachineText == f.read()
         pass
-
-    pass
