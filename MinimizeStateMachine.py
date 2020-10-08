@@ -25,7 +25,6 @@ def findEquivalenceClasses(machine: StateMachine):
         for elem in P:
             S.append((elem, symb))
     
-    print(len(S))
     while len(S) > 0:
         C, a = S.popleft()
         for R in P:
@@ -53,7 +52,7 @@ def minimizeStateMachine(machine: StateMachine) -> StateMachine:
             newStates[elem] = indx
     
     newMachine = StateMachine(alphabet=machine.V,
-                              numberOfStates=len(newStates),
+                              numberOfStates=len(P),
                               begState=newStates[machine.begState],
                               endStates=[newStates[state] for state in machine.endStates])
     
