@@ -5,7 +5,7 @@ from MinimizeStateMachine import minimizeStateMachine
 
 
 def main():
-    machine = readStateMichineFromFile('tests/machines/machine_5.txt')
+    machine = readStateMichineFromFile('tests/machines/machine_7.txt')
 
     minMachine = minimizeStateMachine(machine)
 

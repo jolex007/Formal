@@ -1,0 +1,33 @@
+digraph before {
+	rankdir=LR size="8,5"
+	node [shape=doublecircle]
+	4
+	1
+	0
+	2
+	5
+	node [shape=circle]
+	0 -> 1 [label=a]
+	0 -> 6 [label=b]
+	1 -> 8 [label=a]
+	1 -> 0 [label=b]
+	2 -> 5 [label=b]
+	2 -> 3 [label=a]
+	3 -> 3 [label=a]
+	3 -> 3 [label=b]
+	4 -> 9 [label=b]
+	4 -> 3 [label=a]
+	5 -> 8 [label=a]
+	5 -> 6 [label=b]
+	6 -> 1 [label=a]
+	6 -> 7 [label=b]
+	7 -> 2 [label=a]
+	7 -> 3 [label=b]
+	8 -> 8 [label=a]
+	8 -> 6 [label=b]
+	9 -> 8 [label=a]
+	9 -> 7 [label=b]
+	node [style=invisible]
+	secret_node
+	secret_node -> 4
+}
